@@ -1,0 +1,14 @@
+{
+  "name": "devops-lab-3",
+  "version": "1.0.0",
+  "description": "Lab 3 - build, optimize, tag, push and scan OCI container images",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,43 @@
+DevOps Lab 3 - Build, optimize, tag, push and scan OCI container images
+Samuel Shine
+26 September 2026
+
+1. I wrote a small Express API in src/server.js with a / route that returns the app version and a /health route for health checks.
+
+2. I started Docker Desktop (engine 29.1.3 with BuildKit) as the container tool and installed Trivy 0.74.0 through Homebrew to scan images.
+
+3. Dockerfile.unoptimized is a plain single-stage build on node:20 that copies everything and runs npm install, and I kept it only as a baseline to compare against.
+
+4. The main Dockerfile uses a multi-stage build where node:20-alpine installs production dependencies with npm ci --omit=dev and only node_modules, package.json and src are copied into the final image.
+
+5. The runtime stage is gcr.io/distroless/nodejs20-debian12:nonroot, which has no shell or package manager and runs the app as the nonroot user.
+
+6. A .dockerignore file keeps node_modules, git data, reports and the Dockerfiles out of the build context so the build is smaller and caches better.
+
+7. I added the standard org.opencontainers.image labels (title, version, revision, created, source, licenses, authors) and filled the version, commit and build time in through build arguments.
+
+8. The unoptimized image came out at 1.58 GB on disk and the optimized one at 186 MB, which is about 88 percent smaller.
+
+9. I ran the optimized container on port 3003 and both endpoints answered, and docker exec could not find the id command because distroless has no shell tools.
+
+10. Trivy found 7,718 vulnerabilities in the unoptimized image (71 critical, 1,276 high) and 54 in the optimized one (1 critical, 5 high), with none in the app's npm dependencies in either case.
+
+11. All six high and critical findings in the optimized image are in libssl3 from the distroless base, and Debian has fixed versions out that the distroless image has not picked up yet.
+
+12. I created the GitHub repository samuelshine/devops-lab-3 with gh repo create and pushed the code before building, so the image could carry the real commit hash.
+
+13. I made a docker-container buildx builder and built the image for linux/amd64 and linux/arm64 with oci-mediatypes=true, so Docker Hub stores an OCI image index and not a Docker manifest list.
+
+14. The image went to Docker Hub as samuelshine/devops-lab-3 with the tags 1.0.0, 1.0, latest and sha-e619029, and all four point to digest sha256:64560a2b1748e4e34ad372924f7c2681304f0cee539dfd3fc8fff35c6ffd3af9.
+
+15. docker buildx imagetools inspect shows the pushed media type as application/vnd.oci.image.index.v1+json with one OCI manifest per platform.
+
+16. I also exported the image as an OCI image layout (oci-layout file, index.json and blobs) with buildx -o type=oci to check it against the OCI spec outside any registry.
+
+17. I deleted the local copy, pulled samuelshine/devops-lab-3:latest back from Docker Hub and ran it, and it returned the expected JSON.
+
+18. I scanned the pushed image straight from the registry with --image-src remote and saved the results as a table, as SARIF for GitHub code scanning, and as a CycloneDX SBOM in the reports folder.
+
+19. A Trivy gate set to fail on fixable critical issues exited with code 1 because of the libssl3 CVE, so a pipeline using it would block this image until the distroless base is rebuilt.
+
+20. Every scan report is in the reports folder of the repository so the before and after numbers can be checked.

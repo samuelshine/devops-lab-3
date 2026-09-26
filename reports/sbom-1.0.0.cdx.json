@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:46c3b75f-27a5-48d1-94df-f02429a0f8c2",
+  "serialNumber": "urn:uuid:66bae88b-71cf-4a54-9df5-674bc4f07722",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-26T04:41:12+00:00",
+    "timestamp": "2026-09-26T04:49:29+00:00",
     "tools": {
       "components": [
         {
@@ -178,7 +178,7 @@
   },
   "components": [
     {
-      "bom-ref": "b400eebc-9941-48d5-9ceb-f56df8f4a587",
+      "bom-ref": "733aaa2a-4eb3-4a83-b059-a2646a6dc136",
       "type": "operating-system",
       "name": "debian",
       "version": "12.13",
@@ -3576,7 +3576,7 @@
   ],
   "dependencies": [
     {
-      "ref": "b400eebc-9941-48d5-9ceb-f56df8f4a587",
+      "ref": "733aaa2a-4eb3-4a83-b059-a2646a6dc136",
       "dependsOn": [
         "pkg:deb/debian/base-files@12.4%2Bdeb12u13?arch=amd64&distro=debian-12.13",
         "pkg:deb/debian/gcc-12-base@12.2.0-14%2Bdeb12u1?arch=amd64&distro=debian-12.13",
@@ -3909,7 +3909,7 @@
     {
       "ref": "pkg:oci/devops-lab-3@sha256:64560a2b1748e4e34ad372924f7c2681304f0cee539dfd3fc8fff35c6ffd3af9?arch=amd64&repository_url=index.docker.io%2Fsamuelshine%2Fdevops-lab-3",
       "dependsOn": [
-        "b400eebc-9941-48d5-9ceb-f56df8f4a587",
+        "733aaa2a-4eb3-4a83-b059-a2646a6dc136",
         "pkg:npm/accepts@1.3.8",
         "pkg:npm/array-flatten@1.1.1",
         "pkg:npm/body-parser@1.20.8",
